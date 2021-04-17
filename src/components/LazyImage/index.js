@@ -11,15 +11,17 @@ const LazyImage = ({
     smallSource,
     source,
     aspectRatio,
+    shouldLoad,
 }) => {
     const opacity = new Animated.Value(0);
     const [loaded, setLoaded] = useState(false);  //Forçar delay mesmo com uso de cache
 
     useEffect(() => {
-        setTimeout(() => { //Forçar delay mesmo com uso de cache
-            setLoaded(true);
-        }, 1000);
-    }, []);
+        if (shouldLoad)
+            setTimeout(() => { //Forçar delay mesmo com uso de cache
+                setLoaded(true);
+            }, 1000);
+    }, [shouldLoad]);
 
     function handleAnimate() {
         Animated.timing(opacity, {

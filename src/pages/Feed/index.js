@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { View, FlatList } from 'react-native';
 
 import LazyImage from '../../components/LazyImage';
@@ -18,6 +18,7 @@ const Feed = () => {
     const [total, setTotal]  = useState(0);
     const [loading, setLoading] = useState(false);
     const [refreshing, setRefreshing] = useState(false);
+    const [viewable, setViewable] = useState([]);
 
     async function loadPage(pageNumber = page, shouldRefresh = false) {
         if (total && pageNumber > total) return;
@@ -49,38 +50,48 @@ const Feed = () => {
         setRefreshing(false);
     }
 
-  return (
-    <View>
-        <FlatList 
-            data={feed}
-            keyExtractor={post => String(post.id)}
-            onEndReached={() => loadPage()}
-            onEndReachedThreshold={0.2}
-            onRefresh={refreshList}
-            refreshing={refreshing}
-            ListFooterComponent={loading && <Loading />}
-            renderItem={({ item }) => (
-                <Post>
-                    <Header>
-                        <Avatar source={{ uri: item.author.avatar }} />
-                        <Name>{item.author.name}</Name>
-                    </Header>
+    const handleViewableChanged = useCallback(({ changed }) => {
+        setViewable(changed.map(({ item }) => item.id));
+    }, []);
 
-                    <LazyImage
-                        aspectRatio={item.aspectRatio}
-                        smallSource={{ uri: item.small }}
-                        source={{ uri: item.image }}
-                    />
+    return (
+        <View>
+            <FlatList 
+                data={feed}
+                keyExtractor={post => String(post.id)}
+                onEndReached={() => loadPage()}
+                onEndReachedThreshold={0.2}
+                onRefresh={refreshList}
+                refreshing={refreshing}
+                onViewableItemsChanged={handleViewableChanged}
+                viewabilityConfig={{ 
+                    viewAreaCoveragePercentThreshold: 20,
+                    minimumViewTime: 150,
+                }}
+                ListFooterComponent={loading && <Loading />}
+                renderItem={({ item }) => (
+                    <Post>
+                        <Header>
+                            <Avatar source={{ uri: item.author.avatar }} />
+                            <Name>{item.author.name}</Name>
+                        </Header>
 
-                    <Description>
-                        <Name>{item.author.name}</Name> {item.description}
-                    </Description>
-                </Post>
-            )}
-        />
+                        <LazyImage
+                            shouldLoad={viewable.includes(item.id)}
+                            aspectRatio={item.aspectRatio}
+                            smallSource={{ uri: item.small }}
+                            source={{ uri: item.image }}
+                        />
 
-    </View>
-  );
+                        <Description>
+                            <Name>{item.author.name}</Name> {item.description}
+                        </Description>
+                    </Post>
+                )}
+            />
+
+        </View>
+    );
 }
 
 export default Feed;
