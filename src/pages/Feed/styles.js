@@ -11,9 +11,9 @@ export const Header = styled.View`
 `;
 
 export const Avatar = styled.Image`
-    width: 32;
-    height: 32;
-    border-radius: 16;
+    width: 32px;
+    height: 32px;
+    border-radius: 16px;
     margin-right: 10px;
 `;
 
