@@ -1,18 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { View } from 'react-native';
+import { Animated } from 'react-native';
 
 import {
     Small,
     Original,
 } from './styles';
 
+const OriginalAnimated = Animated.createAnimatedComponent(Original);
 const LazyImage = ({ 
     smallSource,
     source,
     aspectRatio,
 }) => {
-
-    const [loaded, setLoaded] = useState(false);
+    const opacity = new Animated.Value(0);
+    const [loaded, setLoaded] = useState(false);  //Forçar delay mesmo com uso de cache
 
     useEffect(() => {
         setTimeout(() => { //Forçar delay mesmo com uso de cache
@@ -21,7 +22,11 @@ const LazyImage = ({
     }, []);
 
     function handleAnimate() {
-
+        Animated.timing(opacity, {
+            toValue: 1,
+            duration: 500,
+            useNativeDriver: true,
+        }).start();
     }
 
     return (
@@ -32,8 +37,9 @@ const LazyImage = ({
         blurRadius={2}
         >   
         {
-            loaded && 
-            <Original 
+            loaded &&  //Forçar delay mesmo com uso de cache
+            <OriginalAnimated
+                style={{ opacity }}
                 source={source}
                 ratio={aspectRatio}
                 resizeMode="contain"
