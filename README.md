@@ -5,11 +5,11 @@ Este projeto foi feito para treinar os conhecimentos de front-end na criação d
 
 <p align="center">
   <a href="https://www.linkedin.com/in/caio-oliveira-b1365a124/">
-    <img alt="linkedin" src="https://img.shields.io/badge/-Caio%20Oliveira-0a66c2?style=flat&logo=Linkedin&logoColor=white">
+    <img alt="linkedin" src="https://img.shields.io/badge/-Caio%20Oliveira-0a66c2?logo=Linkedin&logoColor=white">
   </a>
 
   <a href="./LICENSE"> 
-    <img  alt="License" src="https://img.shields.io/github/license/caiolv/instaclone?style=flat">
+    <img  alt="License" src="https://img.shields.io/github/license/caiolv/instaclone">
   </a>
 </p>
 
